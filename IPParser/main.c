@@ -12,21 +12,21 @@
 #include <stdbool.h>
 #include <assert.h>
 #define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
+#define IS_BLANK(c) ((c) == ' ' || (c) == '\t')
+#define IS_DOT(c) ((c) == '.')
 long long convert(const char * ipstr){
     if (ipstr == NULL || strlen(ipstr) == 0) {
         return -1;
     }
     long long r = 0;
     int dotCount = 3;
-    char dot = '.';
-    char speace = ' ';
     int stackCount = 0;
     int stack[3] = {-1,-1,-1};
     bool isSpace = false;
     
     for (int i = 0; i < strlen(ipstr); i++) {
         char sub = ipstr[i];
-        if (sub == dot) {
+        if (IS_DOT(sub)) {
             if (stackCount == 0) {
                  printf("栈内元素等于0，ip地址无效\n");
                 return -1;
@@ -46,7 +46,7 @@ long long convert(const char * ipstr){
             r += stepCount << (dotCount * 8);
             stackCount = 0;
             dotCount--;
-        }else if (sub == speace) {
+        }else if (IS_BLANK(sub)) {
             if (i == 0){
                 printf("开头有空格，ip地址无效\n");
                 return -1;
@@ -117,7 +117,7 @@ int main(int argc, const char * argv[]) {
     assert(convert("172.168.1") == -1);
     assert(convert("172.168.1.") == -1);
      assert(convert("172.168.1.1.") == -1);
-    assert(convert("172.168.1.1.1") == -1);
+    assert(convert("    172.168.1.1.1") == -1);
     
     assert(convert(" 10.68.1.2") == -1);
     assert(convert("1 0.68.1.2") == -1);
