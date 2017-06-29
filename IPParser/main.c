@@ -11,6 +11,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <assert.h>
+#define IS_DIGIT(c) ((c) >= '0' && (c) <= '9')
 long long convert(const char * ipstr){
     if (ipstr == NULL || strlen(ipstr) == 0) {
         return -1;
@@ -51,7 +52,7 @@ long long convert(const char * ipstr){
                 return -1;
             }
             isSpace = true;
-        }else{
+        }else if(IS_DIGIT(sub)){
             if(stackCount > 2){
                 printf("栈内元素大于3，ip地址无效\n");
                 return -1;
@@ -63,6 +64,9 @@ long long convert(const char * ipstr){
             isSpace = false;
             stack[stackCount] = sub - '0';
             stackCount ++;
+        }else{
+            printf("无效字符，ip地址无效\n");
+            return -1;
         }
     }
     
@@ -128,7 +132,9 @@ int main(int argc, const char * argv[]) {
     assert(convert("256.256.256.256") == -1);
     assert(convert("256.255.255.1") == -1);
     assert(convert("255.256.1.255") == -1);
-    assert(convert("1.255.255.256") == -1);
+    assert(convert("1.255.255.256") == -1);
+    
+    assert(convert("-1.255.255.256") == -1);
     
     return 0;
 }
